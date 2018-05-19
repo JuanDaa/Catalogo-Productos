@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" onerror="error()" /> 
+	<p:dialog widgetVar="statusDialog" modal="false" draggable="false" closable="false" resizable="false" showHeader="false">
+		<h:outputText value="Cargando" styleClass="status"/>
+	</p:dialog>
+	<script type="text/javascript">
+			function error() {
+				PF('statusDialog').hide();
+			}
+	
+	</script>
+</ui:composition>
+
+
+
+

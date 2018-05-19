@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/templates/layout.xhtml"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <ui:define name="content">
+        <h:form id="listaCompra">
+            <p:commandButton
+                    value="Catalogo de productos"
+                    ajax="false"
+                    action="index.xhmtl?faces-redirect=true"/>
+
+            <p:dataList emptyMessage="No has realizado ninguna compra aún" value="#{catalogoBean.listaCompras}" var="compra" type="unordered" itemType="none" paginator="true" rows="10" styleClass="paginated">
+                <f:facet name="header">
+                    Lista de compras
+                </f:facet>
+                <p:commandLink update=":listaCompra:compraDetalle" oncomplete="PF('compraDialog').show()" title="View Detail" styleClass="ui-icon ui-icon-search" style="float:left;margin-right:10px">
+                    <f:setPropertyActionListener value="#{compra}" target="#{catalogoBean.compraSeleccionada}" />
+                    <h:outputText value="#{compra.nombreProducto}, #{compra.fechaCompra}" />
+                </p:commandLink>
+                <h:outputText value="#{compra.nombreProducto}, #{compra.fechaCompra}" style="display:inline-block"/>
+            </p:dataList>
+
+            <p:dialog header="Información de compra" widgetVar="compraDialog" modal="true" showEffect="blind" hideEffect="explode" resizable="false">
+                <p:outputPanel id="compraDetalle" style="text-align:center;">
+                    <p:panelGrid columns="2" rendered="#{not empty catalogoBean.compraSeleccionada}" columnClasses="label,value">
+                        <h:outputText value="Codigo de compra:" />
+                        <h:outputText value="#{catalogoBean.compraSeleccionada.id}"/>
+
+                        <h:outputText value="Nombre del producto:" />
+                        <h:outputText value="#{catalogoBean.compraSeleccionada.nombreProducto}" />
+
+                        <h:outputText value="Fecha de compra:" />
+                        <h:outputText value="#{catalogoBean.compraSeleccionada.fechaCompra}" />
+
+                        <h:outputText value="Cantidad adquirida:" />
+                        <h:outputText value="#{catalogoBean.compraSeleccionada.cantidadAdquirida}"/>
+                    </p:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

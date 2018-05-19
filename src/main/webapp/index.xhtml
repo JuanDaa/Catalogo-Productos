@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/templates/layout.xhtml"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <ui:define name="content">
+        <h:form id="form">
+
+            <p:commandButton
+                    value="Mis compras"
+                    ajax="false"
+                    action="listaCompra.xhmtl?faces-redirect=true"/>
+
+            <p:growl id="growl" showDetail="true" sticky="true" life="4000"/>
+            <p:dataGrid var="compra" value="#{catalogoBean.listaProductos}" emptyMessage="No hay productos disponibles" columns="3" layout="grid"
+                        rows="6" paginator="true" id="productos"
+                        paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                        rowsPerPageTemplate="6,12,16">
+
+                <f:facet name="header">
+                    Catalogo de productos
+                </f:facet>
+
+                <p:panel header="#{compra.nombre}" rendered="#{compra.cantidadDisponible > 0}" style="text-align:center">
+                    <h:panelGrid columns="1" style="width:100%">
+                        <p:graphicImage library="images" name="#{compra.imagenProducto}" alt="#{compra.nombre}" height="190" width="190"/>
+                        <h:outputText value="#{compra.precio}" >
+                            <f:convertNumber type="currency" currencySymbol="$" />
+                        </h:outputText>
+
+                        <h:outputText value="Cantidad disponible:" />
+                        <h:outputText value="#{compra.cantidadDisponible}"></h:outputText>
+
+                        <p:commandButton update=":form:carDetail" action="#{catalogoBean.cargarProductoSeleccionado}" oncomplete="PF('carDialog').show()" title="Ver producto">
+                            <f:setPropertyActionListener value="#{compra}" target="#{catalogoBean.productoSeleccionado}" />
+                        </p:commandButton>
+                    </h:panelGrid>
+                </p:panel>
+
+            </p:dataGrid>
+
+            <p:dialog header="Comprar producto" id="carDetail" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <h:form id="producto_form">
+                        <p:panelGrid columns="2" rendered="#{not empty catalogoBean.productoSeleccionado}" columnClasses="label,value">
+                        <f:facet name="header">
+                            <p:graphicImage library="images" name="#{catalogoBean.productoSeleccionado.imagenProducto}" alt="#{catalogoBean.productoSeleccionado.nombre}" width="100"/>
+                        </f:facet>
+
+                        <h:outputText value="Nombre:" />
+                        <h:outputText value="#{catalogoBean.productoSeleccionado.nombre}" />
+
+                        <h:outputText value="Descripción:" />
+                        <h:outputText value="#{catalogoBean.productoSeleccionado.descripcion}" />
+
+                        <h:outputText value="Color:" />
+                        <h:outputText value="#{catalogoBean.productoSeleccionado.color}"/>
+
+                        <h:outputText value="Precio:" />
+                            <h:outputText value="#{catalogoBean.productoSeleccionado.precio}" >
+                                <f:convertNumber type="currency" currencySymbol="$" />
+                            </h:outputText>
+                            <h:outputText value="total:" />
+                            <h:outputText  id="precioCantidad" value="#{catalogoBean.productoSeleccionado.precio * catalogoBean.cantidadComprar}" >
+                                <f:convertNumber type="currency" currencySymbol="$" />
+                            </h:outputText>
+
+                        <h:outputText value="Cantidad disponible:" />
+                        <h:outputText value="#{catalogoBean.productoSeleccionado.cantidadDisponible}"></h:outputText>
+
+                    </p:panelGrid>
+                    <p:spinner required="true" value="#{catalogoBean.cantidadComprar}" min="1" max="#{catalogoBean.productoSeleccionado.cantidadDisponible}" >
+                        <p:ajax update=":form:producto_form:precioCantidad" process="@this" />
+                    </p:spinner>
+                    <p:commandButton process="@this" value="Comprar" actionListener="#{catalogoBean.comprarProductos}" update=":form:growl :form"></p:commandButton>
+                </h:form>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

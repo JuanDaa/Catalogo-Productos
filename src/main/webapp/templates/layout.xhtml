@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+
+
+		<h:outputStylesheet library="css" name="catalogo_productos.css" />
+		<link rel="shortcut icon" href="#{request.contextPath}/resources/images/favicon.ico" />
+		<title>Catalogo productos</title>
+
+        <ui:insert name="head"/>
+    </h:head>
+
+    <h:body>
+        
+        <div>
+            <ui:include src="./topbar.xhtml" />
+            
+            <div class="layout-main">
+                <ui:insert name="content"/>               
+                <ui:include src="./footer.xhtml" />
+            </div>
+        </div>
+        
+        <ui:insert name="appendToBody" />
+		<ui:include src="messages.xhtml" />
+		<ui:include src="confirm.xhtml" />
+		<ui:include src="status.xhtml" />
+
+
+    </h:body>
+
+</html>
